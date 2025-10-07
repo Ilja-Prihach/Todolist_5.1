@@ -64,7 +64,7 @@ export const Login = () => {
 
 //2variaant Navigate
   if (isLoggedIn) {
-    <Navigate to={Path.Main} />
+    return <Navigate to={Path.Main} />
   }
 
   return (
