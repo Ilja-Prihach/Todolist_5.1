@@ -1,5 +1,5 @@
 import { selectThemeMode } from "@/app/app-slice"
-import { useAppSelector } from "@/common/hooks"
+import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { getTheme } from "@/common/theme"
 import { type LoginInputs, loginSchema } from "@/features/auth/lib/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,16 +13,35 @@ import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
+import { loginTC, selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
+import { Navigate,  } from "react-router"
+import { Path } from "@/common/routing"
+//import { useEffect } from "react"
+
 
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
+  const isLoggedIn = useAppSelector(selectIsLoggedIn) // need for variant 1 and 2
 
   const theme = getTheme(themeMode)
+
+  const dispatch = useAppDispatch()
+
+
+ // const navigate = useNavigate()
+  // 1 variant
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     navigate(Path.Main)
+  //   }
+  // }, [isLoggedIn])
+
+
 
   const {
     register,
     handleSubmit,
-    reset,
+    //reset,
     control,
     formState: { errors },
   } = useForm<LoginInputs>({
@@ -31,8 +50,21 @@ export const Login = () => {
   })
 
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
-    console.log(data)
-    reset()
+    dispatch(loginTC(data))
+    //reset()
+  }
+  // 3var
+  // const onSubmit: SubmitHandler<LoginInputs> = (data) => {
+  //   console.log(data)
+  //   dispatch(loginTC(data)).unwrap().then(() => {
+  //     navigate(Path.Main)
+  //   })
+  //   //reset()
+  // }
+
+//2variaant Navigate
+  if (isLoggedIn) {
+    <Navigate to={Path.Main} />
   }
 
   return (
@@ -89,3 +121,8 @@ export const Login = () => {
     </Grid>
   )
 }
+
+
+
+
+//Ilja_Prihach
