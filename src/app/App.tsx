@@ -7,17 +7,31 @@ import { getTheme } from "@/common/theme"
 import CssBaseline from "@mui/material/CssBaseline"
 import { ThemeProvider } from "@mui/material/styles"
 import { meTC } from "@/features/auth/model/auth-slice.ts"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { CircularProgress } from "@mui/material"
+import s from './App.module.css'
 
 export const App = () => {
   const themeMode = useAppSelector(selectThemeMode)
 
+  const [init, setInit] = useState(false)
+
   const theme = getTheme(themeMode)
 
   const dispatch = useAppDispatch()
+
   useEffect(() => {
-    dispatch(meTC())
+    dispatch(meTC()).finally( () => setInit(true)
+      )
   }, [])
+
+  if(!init) {
+    return (
+      <div className={s.circularProgressContainer}>
+        <CircularProgress size={150} thickness={3} />
+      </div>
+    )
+  }
 
   return (
     <ThemeProvider theme={theme}>
